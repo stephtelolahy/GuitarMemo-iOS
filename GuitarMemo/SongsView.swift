@@ -11,9 +11,9 @@ import SwiftData
 struct SongsView: View {
     @Environment(\.modelContext) private var context
     @Query(sort: \Song.title) private var songs: [Song]
+    @State private var searchText = ""
     @State private var showingAddSong = false
     @State private var showingHelp = false
-    @State private var searchText = ""
 
     var filteredSongs: [Song] {
         if searchText.isEmpty {
@@ -54,15 +54,25 @@ struct SongsView: View {
                         placement: .navigationBarDrawer(displayMode: .automatic),
                         prompt: "Rechercher une chanson")
             .toolbar {
-                Button {
-                    showingAddSong = true
-                } label: {
-                    Image(systemName: "plus")
+                ToolbarItem(placement: .automatic) {
+                    Button {
+                        showingAddSong = true
+                    } label: {
+                        Image(systemName: "plus")
+                    }
                 }
-                Button {
-                    showingHelp = true
-                } label: {
-                    Image(systemName: "questionmark.circle")
+                ToolbarItem(placement: .automatic) {
+                    Button {
+                        showingHelp = true
+                    } label: {
+                        Image(systemName: "questionmark.circle")
+                    }
+                }
+                ToolbarItem(placement: .navigationBarLeading) {
+                    ShareLink(
+                        item: exportSongs()!,
+                        preview: SharePreview("Export to JSON!", icon: Image("file"))
+                    )
                 }
             }
             .sheet(isPresented: $showingAddSong) {
@@ -81,6 +91,23 @@ struct SongsView: View {
             context.delete(filteredSongs[index])
         }
         try? context.save()
+    }
+
+    private func exportSongs() -> URL? {
+        do {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+            let data = try encoder.encode(songs)
+
+            let tempURL = FileManager.default.temporaryDirectory
+                .appendingPathComponent("songs.json")
+
+            try data.write(to: tempURL, options: .atomic)
+            return tempURL
+        } catch {
+            print("Erreur export JSON:", error)
+            return nil
+        }
     }
 }
 
