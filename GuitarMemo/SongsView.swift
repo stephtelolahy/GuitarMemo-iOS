@@ -50,9 +50,10 @@ struct SongsView: View {
                 .onDelete(perform: deleteSongs)
             }
             .navigationTitle("Chansons")
-            .searchable(text: $searchText,
-                        placement: .navigationBarDrawer(displayMode: .automatic),
-                        prompt: "Rechercher une chanson")
+            .toolbar {
+                // Liquid Glass: full search field pinned in the bottom toolbar.
+                DefaultToolbarItem(kind: .search, placement: .bottomBar)
+            }
             .toolbar {
                 ToolbarItem(placement: .automatic) {
                     Button {
@@ -84,6 +85,8 @@ struct SongsView: View {
         } detail: {
             Text("Select an item")
         }
+        .searchable(text: $searchText, prompt: "Rechercher une chanson")
+        .searchToolbarBehavior(.automatic)
     }
 
     private func deleteSongs(at offsets: IndexSet) {
