@@ -37,7 +37,7 @@ struct SongSeederTests {
 
     @Test func bundleContainsAllSongs() {
         let songs = SongSeeder.bundledSongs(in: appBundle)
-        #expect(songs.count == 24)
+        #expect(songs.count == 74)
         #expect(songs.allSatisfy { !$0.tablature.isEmpty })
         #expect(songs.contains { $0.title == "Hélène - Roch Voisine" })
     }
@@ -54,10 +54,10 @@ struct SongSeederTests {
         let defaults = makeDefaults()
 
         SongSeeder.seedIfNeeded(context: context, defaults: defaults, bundle: appBundle)
-        #expect(try titles(in: context).count == 24)
+        #expect(try titles(in: context).count == 74)
 
         SongSeeder.seedIfNeeded(context: context, defaults: defaults, bundle: appBundle)
-        #expect(try titles(in: context).count == 24)
+        #expect(try titles(in: context).count == 74)
     }
 
     @Test func doesNotDuplicateExistingTitles() throws {
@@ -68,7 +68,7 @@ struct SongSeederTests {
         SongSeeder.seedIfNeeded(context: context, defaults: makeDefaults(), bundle: appBundle)
 
         let all = try titles(in: context)
-        #expect(all.count == 24)
+        #expect(all.count == 74)
         #expect(all.filter { $0 == "Zombie - Cranberries" }.count == 1)
     }
 
@@ -122,6 +122,6 @@ struct SongSeederTests {
         try context.save()
 
         SongSeeder.seedIfNeeded(context: context, defaults: defaults, bundle: appBundle)
-        #expect(try titles(in: context).count == 23)
+        #expect(try titles(in: context).count == 73)
     }
 }

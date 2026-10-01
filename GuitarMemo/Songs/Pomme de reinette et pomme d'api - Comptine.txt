@@ -1,0 +1,10 @@
+image: https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/d8/59/81/d8598167-b550-a530-f615-9ef4c3fd110d/859713652415_cover.tif/600x600bb.jpg
+
+C                    G
+Pomme de reinette et pomme d'api,
+G               C
+Tapis, tapis rouge,
+C                    G
+Pomme de reinette et pomme d'api,
+G               C
+Tapis, tapis gris.
