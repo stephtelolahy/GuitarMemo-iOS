@@ -72,6 +72,34 @@ struct SongSeederTests {
         #expect(all.filter { $0 == "Zombie - Cranberries" }.count == 1)
     }
 
+    @Test func everyBundledSongHasAnImage() {
+        let songs = SongSeeder.bundledSongs(in: appBundle)
+        #expect(Set(songs.map(\.title)) == Set(SongImages.byTitle.keys))
+        #expect(songs.allSatisfy { URL(string: $0.imageUrl)?.scheme == "https" })
+    }
+
+    @Test func seededSongsHaveImages() throws {
+        let context = try makeContext()
+        SongSeeder.seedIfNeeded(context: context, defaults: makeDefaults(), bundle: appBundle)
+        #expect(try context.fetch(FetchDescriptor<AppSong>()).allSatisfy { !$0.imageUrl.isEmpty })
+    }
+
+    @Test func backfillsMissingImageWithoutTouchingCustomOnes() throws {
+        let context = try makeContext()
+        context.insert(AppSong(title: "Numb - Linkin Park", tablature: "old", imageUrl: ""))
+        context.insert(AppSong(title: "Zombie - Cranberries", tablature: "mine", imageUrl: "https://example.com/z.jpg"))
+        try context.save()
+
+        SongSeeder.seedIfNeeded(context: context, defaults: makeDefaults(), bundle: appBundle)
+
+        let songs = try context.fetch(FetchDescriptor<AppSong>())
+        let numb = try #require(songs.first { $0.title == "Numb - Linkin Park" })
+        let zombie = try #require(songs.first { $0.title == "Zombie - Cranberries" })
+        #expect(numb.imageUrl == SongImages.byTitle["Numb - Linkin Park"])
+        #expect(numb.tablature == "old")
+        #expect(zombie.imageUrl == "https://example.com/z.jpg")
+    }
+
     @Test func deletedSongsAreNotReseeded() throws {
         let context = try makeContext()
         let defaults = makeDefaults()

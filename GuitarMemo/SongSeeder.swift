@@ -6,15 +6,15 @@
 import Foundation
 import SwiftData
 
-/// Inserts the songs bundled in `Songs/*.txt` into the store on first launch.
+/// Inserts the songs bundled in `Songs/*.txt` into the store.
 enum SongSeeder {
-    /// Bump when adding bundled songs so existing installs receive them.
-    static let currentVersion = 1
-    static let versionKey = "seededSongsVersion"
+    /// Titles already seeded once, so songs the user deletes are not re-added.
+    static let seededTitlesKey = "seededSongTitles"
 
     struct BundledSong: Equatable {
         let title: String
         let tablature: String
+        let imageUrl: String
     }
 
     /// "Wild world - Cat Stevens.txt" -> "Wild world - Cat Stevens"
@@ -29,26 +29,36 @@ enum SongSeeder {
         return urls
             .compactMap { url in
                 guard let tablature = try? String(contentsOf: url, encoding: .utf8) else { return nil }
-                return BundledSong(title: title(forFileName: url.lastPathComponent), tablature: tablature)
+                let title = title(forFileName: url.lastPathComponent)
+                return BundledSong(title: title, tablature: tablature, imageUrl: SongImages.byTitle[title] ?? "")
             }
             .sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
     }
 
-    /// Seeds once per `currentVersion`, so songs the user deletes are not re-added,
-    /// and skips titles already in the store so nothing is duplicated.
+    /// Adds bundled songs that were never seeded and are not already in the store,
+    /// and fills in the image of bundled songs stored without one.
     static func seedIfNeeded(context: ModelContext,
                              defaults: UserDefaults = .standard,
                              bundle: Bundle = .main) {
-        guard defaults.integer(forKey: versionKey) < currentVersion else { return }
+        let bundled = bundledSongs(in: bundle)
+        var seededTitles = Set(defaults.stringArray(forKey: seededTitlesKey) ?? [])
+        let stored = (try? context.fetch(FetchDescriptor<Song>())) ?? []
+        let storedByTitle = Dictionary(stored.map { ($0.title, $0) }, uniquingKeysWith: { first, _ in first })
 
-        let existingTitles = Set(((try? context.fetch(FetchDescriptor<Song>())) ?? []).map(\.title))
-        for song in bundledSongs(in: bundle) where !existingTitles.contains(song.title) {
-            context.insert(Song(title: song.title, tablature: song.tablature, imageUrl: ""))
+        for song in bundled {
+            if let existing = storedByTitle[song.title] {
+                if existing.imageUrl.isEmpty && !song.imageUrl.isEmpty {
+                    existing.imageUrl = song.imageUrl
+                }
+            } else if !seededTitles.contains(song.title) {
+                context.insert(Song(title: song.title, tablature: song.tablature, imageUrl: song.imageUrl))
+            }
+            seededTitles.insert(song.title)
         }
 
         do {
             try context.save()
-            defaults.set(currentVersion, forKey: versionKey)
+            defaults.set(seededTitles.sorted(), forKey: seededTitlesKey)
         } catch {
             print("Erreur import chansons:", error)
         }
