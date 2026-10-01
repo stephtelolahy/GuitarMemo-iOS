@@ -1,3 +1,5 @@
+image: https://is1-ssl.mzstatic.com/image/thumb/Music114/v4/1b/15/c6/1b15c6f2-f154-a645-2a2e-11d41370de54/cover.jpg/600x600bb.jpg
+
 C            G
 Petit escargot
 G            C

@@ -1,3 +1,5 @@
+image: https://is1-ssl.mzstatic.com/image/thumb/Music5/v4/52/25/51/5225513b-21ae-6d40-ebab-4f6821f52742/859713667778_cover.tif/600x600bb.jpg
+
 D                          A
 Un crocodile s'en allant à la guerre
 A                              D

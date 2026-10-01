@@ -122,6 +122,6 @@ struct SongSeederTests {
         try context.save()
 
         SongSeeder.seedIfNeeded(context: context, defaults: defaults, bundle: appBundle)
-        #expect(try titles(in: context).count == 23)
+        #expect(try titles(in: context).count == 73)
     }
 }

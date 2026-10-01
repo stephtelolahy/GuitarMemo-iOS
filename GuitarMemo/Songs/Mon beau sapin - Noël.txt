@@ -1,3 +1,5 @@
+image: https://is1-ssl.mzstatic.com/image/thumb/Music128/v4/97/89/93/9789939b-83f3-8abe-2534-c0a854d136ee/00731455972825.rgb.jpg/600x600bb.jpg
+
 C                    G       C
 Mon beau sapin, roi des forêts,
 C        G       C

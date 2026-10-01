@@ -1,3 +1,5 @@
+image: https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/14/69/74/14697462-df17-68e4-50fa-481181c4c0fb/artwork.jpg/600x600bb.jpg
+
 C                 G   C
 Frère Jacques, Frère Jacques,
 C              G    C

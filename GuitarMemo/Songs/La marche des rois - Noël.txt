@@ -1,3 +1,5 @@
+image: https://is1-ssl.mzstatic.com/image/thumb/Music/v4/a5/1f/98/a51f9839-f137-9c9f-f98d-d4ed908093e7/cover.jpg/600x600bb.jpg
+
 Am                E          Am
 De bon matin, j'ai rencontré le train
 Am                  E           Am

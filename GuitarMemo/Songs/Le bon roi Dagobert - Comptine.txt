@@ -1,3 +1,5 @@
+image: https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/e5/83/3f/e5833fdd-c81d-8a44-64c1-38b57b5ca942/3617228552647.jpg/600x600bb.jpg
+
 G                  D
 Le bon roi Dagobert
 D                       G

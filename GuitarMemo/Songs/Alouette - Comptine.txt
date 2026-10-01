@@ -1,3 +1,5 @@
+image: https://is1-ssl.mzstatic.com/image/thumb/Music221/v4/5b/1d/31/5b1d31d8-4ee8-6c9e-07a9-a28456936a9d/artwork.jpg/600x600bb.jpg
+
 D                  A
 Alouette, gentille alouette,
 D           A        D
