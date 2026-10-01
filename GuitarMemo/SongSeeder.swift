@@ -22,15 +22,28 @@ enum SongSeeder {
         (fileName as NSString).deletingPathExtension
     }
 
+    /// Parses a song file. An optional first line `image: <url>` (followed by a blank line)
+    /// gives the cover image; the rest is the tablature.
+    static func parse(title: String, contents: String) -> BundledSong {
+        let prefix = "image:"
+        guard contents.hasPrefix(prefix) else {
+            return BundledSong(title: title, tablature: contents, imageUrl: "")
+        }
+        let parts = contents.split(separator: "\n", maxSplits: 1, omittingEmptySubsequences: false)
+        let imageUrl = parts[0].dropFirst(prefix.count).trimmingCharacters(in: .whitespaces)
+        var tablature = parts.count > 1 ? String(parts[1]) : ""
+        if tablature.hasPrefix("\n") { tablature.removeFirst() }
+        return BundledSong(title: title, tablature: tablature, imageUrl: imageUrl)
+    }
+
     static func bundledSongs(in bundle: Bundle = .main) -> [BundledSong] {
         // Synchronized folders copy resources flat into the bundle root; also accept a "Songs" folder.
         let nested = bundle.urls(forResourcesWithExtension: "txt", subdirectory: "Songs") ?? []
         let urls = nested.isEmpty ? (bundle.urls(forResourcesWithExtension: "txt", subdirectory: nil) ?? []) : nested
         return urls
             .compactMap { url in
-                guard let tablature = try? String(contentsOf: url, encoding: .utf8) else { return nil }
-                let title = title(forFileName: url.lastPathComponent)
-                return BundledSong(title: title, tablature: tablature, imageUrl: SongImages.byTitle[title] ?? "")
+                guard let contents = try? String(contentsOf: url, encoding: .utf8) else { return nil }
+                return parse(title: title(forFileName: url.lastPathComponent), contents: contents)
             }
             .sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
     }

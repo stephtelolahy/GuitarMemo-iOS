@@ -72,10 +72,22 @@ struct SongSeederTests {
         #expect(all.filter { $0 == "Zombie - Cranberries" }.count == 1)
     }
 
+    @Test func parsesImageHeader() {
+        let song = SongSeeder.parse(title: "T", contents: "image: https://example.com/a.jpg\n\nAm  C\nla la\n")
+        #expect(song.imageUrl == "https://example.com/a.jpg")
+        #expect(song.tablature == "Am  C\nla la\n")
+    }
+
+    @Test func parsesFileWithoutImageHeader() {
+        let song = SongSeeder.parse(title: "T", contents: "Am  C\nla la\n")
+        #expect(song.imageUrl == "")
+        #expect(song.tablature == "Am  C\nla la\n")
+    }
+
     @Test func everyBundledSongHasAnImage() {
         let songs = SongSeeder.bundledSongs(in: appBundle)
-        #expect(Set(songs.map(\.title)) == Set(SongImages.byTitle.keys))
         #expect(songs.allSatisfy { URL(string: $0.imageUrl)?.scheme == "https" })
+        #expect(songs.allSatisfy { !$0.tablature.contains("image:") })
     }
 
     @Test func seededSongsHaveImages() throws {
@@ -95,7 +107,7 @@ struct SongSeederTests {
         let songs = try context.fetch(FetchDescriptor<AppSong>())
         let numb = try #require(songs.first { $0.title == "Numb - Linkin Park" })
         let zombie = try #require(songs.first { $0.title == "Zombie - Cranberries" })
-        #expect(numb.imageUrl == SongImages.byTitle["Numb - Linkin Park"])
+        #expect(numb.imageUrl.hasPrefix("https://"))
         #expect(numb.tablature == "old")
         #expect(zombie.imageUrl == "https://example.com/z.jpg")
     }

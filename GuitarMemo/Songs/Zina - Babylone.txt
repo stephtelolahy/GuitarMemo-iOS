@@ -1,3 +1,5 @@
+image: https://is1-ssl.mzstatic.com/image/thumb/Music124/v4/8e/ab/bd/8eabbd50-956d-01d7-fe57-552d9b2bb7d3/3610153162240_cover.jpg/600x600bb.jpg
+
 Chords you are going to need :
 G : 320033
 Cadd9 : x32033

@@ -1,3 +1,5 @@
+image: https://is1-ssl.mzstatic.com/image/thumb/Music115/v4/90/78/a0/9078a0b2-04ff-6bae-8adc-23d099f67031/s05.bhjhywpg.jpg/600x600bb.jpg
+
 Intro: C  Cmaj7  Am  F  C  G  Am  F  Fadd9 F
 C  Em  F  C
 Oooo, oooo, oooo...
